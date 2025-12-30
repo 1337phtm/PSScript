@@ -1,10 +1,23 @@
-# Adresse Gmail à pré-remplir
+Clear-Host
 
-$email = Read-Host "Enter @mail "
+# Combien d'adresses Gmail ouvrir ?
+Write-Host ""
+$nmail = Read-Host "How many mails do you want to open ? "
+Write-Host ""
 
-# URL de connexion avec email pré-rempli
-$url = "https://accounts.google.com/signin/v2/identifier?hl=fr&flowName=GlifWebSignIn&flowEntry=ServiceLogin&Email=$email"
+# Vérification que c'est bien un nombre
+if (-not ($nmail -as [int])) {
+    Write-Host "Please enter a valid number."
+    return
+}
 
-# Ouvre dans le navigateur par défaut
+# Boucle pour demander chaque email et ouvrir la page
+for ($i = 1; $i -le $nmail; $i++) {
 
-Start-Process $url
+    $email = Read-Host "Enter email address #$i "
+
+    $url = "https://accounts.google.com/AccountChooser?Email=$email"
+
+    # Ouvrir la page dans le navigateur
+    Start-Process $url
+}
