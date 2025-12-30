@@ -41,7 +41,7 @@ switch ($drivechoice.ToUpper()) {
     "A" {
         Write-Host ""
         Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║     Scanning ALL drives...           ║" -ForegroundColor Cyan
+        Write-Host "║         Scanning ALL drives...       ║" -ForegroundColor Cyan
         Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Cyan
         Write-Host ""
 
