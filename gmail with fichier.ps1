@@ -11,7 +11,8 @@ if (-not (Test-Path $filePath)) {
 
 # Lire les emails
 $emails = Get-Content $filePath |
-Where-Object { $_.Trim() -notmatch "^#" -and $_.Trim() -ne "" }
+ForEach-Object { $_.Split("#")[0].Trim() } |
+Where-Object { $_ -ne "" }
 
 
 # Vérifier qu'il y a au moins un email
