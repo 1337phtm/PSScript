@@ -1,4 +1,4 @@
-﻿Import-Module "$PSScriptRoot\Affichage.psm1" -Force -DisableNameChecking
+﻿Import-Module "..\lib\usb-gui.psm1" -Force -DisableNameChecking
 
 # Table des clés connues
 $TargetSerial = @(

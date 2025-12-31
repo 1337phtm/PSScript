@@ -43,10 +43,11 @@ switch ($drivechoice.ToUpper()) {
         Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Cyan
         Write-Host "║         Scanning ALL drives...       ║" -ForegroundColor Cyan
         Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Cyan
-        Write-Host ""
 
         foreach ($drive in $drives) {
+            Write-Host ""
             Write-Host "Scanning $($drive.Root) ..." -ForegroundColor Yellow
+            Write-Host ""
             Get-ChildItem -Path $drive.Root -Filter "*.$ext" -Recurse -ErrorAction SilentlyContinue
         }
         return
