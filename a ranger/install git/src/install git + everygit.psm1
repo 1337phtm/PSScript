@@ -1,32 +1,28 @@
-﻿
-function clone-repo {
-
+﻿function Clone-Repo {
     Clear-Host
+
     #======================================================================
-    # Install Git
+    # Git Installation Check
     #======================================================================
     Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Cyan
     Write-Host "║            Git Installation          ║" -ForegroundColor Cyan
     Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Cyan
     Write-Host ""
 
-    # Vérification de l'installation de Git
     try {
         $gitCmd = Get-Command git -ErrorAction SilentlyContinue
 
-        if ($gitCmd) {
-            continue
-        }
-        else {
-            Write-Host "➜  Git n'est pas installé." -ForegroundColor Yellow
+        if (-not $gitCmd) {
+            Write-Host "➜  Git is not installed." -ForegroundColor Yellow
             Write-Host ""
             $choice = Read-Host "Do you want to install Git now ? (Y/N)"
             Write-Host ""
-            if ($choice -eq "Y" -or $choice -eq "y") {
+
+            if ($choice -in @("Y", "y")) {
                 Write-Host "Installing Git..." -ForegroundColor Yellow
                 winget install --id Git.Git -e --source winget
 
-                # Recharge PATH pour que Git soit reconnu immédiatement
+                # Reload PATH
                 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
                 [System.Environment]::GetEnvironmentVariable("Path", "User")
 
@@ -36,50 +32,73 @@ function clone-repo {
             }
             else {
                 Write-Host "⚠  Git installation skipped. The script cannot continue." -ForegroundColor DarkRed
-                Write-Host ""
                 Pause
                 return
             }
         }
     }
     catch {
-        Write-Host "Erreur lors de la vérification de Git."
+        Write-Host "Error while checking Git installation." -ForegroundColor Red
+        return
     }
 
-    Pause
     Clear-Host
 
     #======================================================================
-    # Installation WKT
+    # Clone GitHub Repositories
     #======================================================================
 
     Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║               WKT clone              ║" -ForegroundColor Cyan
+    Write-Host "║               WKT Clone              ║" -ForegroundColor Cyan
     Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Cyan
     Write-Host ""
 
     $clonePath = "C:\Repos"
+    if (-not (Test-Path $clonePath)) {
+        New-Item -ItemType Directory -Path $clonePath | Out-Null
+    }
+
     $user = Read-Host "Enter the GitHub username to clone repos from"
+    Write-Host ""
 
-    # Récupère tous les repos publics de l'utilisateur
-    $repos = Invoke-RestMethod "https://api.github.com/users/$user/repositoryGithub"
+    # Correct GitHub API URL
+    $repos = Invoke-RestMethod "https://api.github.com/users/$user/repos"
 
+    # Affichage des repos avec numéros
+    Write-Host "Available repositories:" -ForegroundColor Cyan
+    Write-Host ""
+
+    for ($i = 0; $i -lt $repos.Count; $i++) {
+        Write-Host "[$($i+1)] $($repos[$i].name)" -ForegroundColor Yellow
+        Write-Host ""
+    }
+
+
+
+    # Demande de clonage pour chaque repo
     foreach ($repo in $repos) {
-        Write-Host "$($repo)"
+
+        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N)"
         Write-Host ""
-        $Choice = Read-Host "Do you want to clone the repository : $($repo.name) ? (Y/N)"
-        Write-Host ""
-        if ($Choice -eq 'Y' -or $Choice -eq 'y') {
-            Write-Host "✔  Proceeding to clone $($repo.name)." -ForegroundColor Green
-            Write-Host ""
-            $url = $repo.clone_url
-            git clone $url $clonePath\$($repo.name)
+
+        if ($choice -in @("Y", "y")) {
+
+            $target = "$clonePath\$($repo.name)"
+
+            if (Test-Path $target) {
+                Write-Host "⚠  Folder already exists. Updating" -ForegroundColor Yellow
+                Set-Location $target
+                git pull origin main
+            }
+            else {
+                Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
+                git clone $repo.clone_url $target
+            }
         }
         else {
             Write-Host "Skipping $($repo.name)..."
-            Write-Host ""
-            continue
         }
+
         Write-Host ""
         Pause
         Write-Host ""
@@ -87,6 +106,4 @@ function clone-repo {
 
 }
 
-Clear-Host
-
-Export-ModuleMember -Function *-*
+Export-ModuleMember -Function Clone-Repo
