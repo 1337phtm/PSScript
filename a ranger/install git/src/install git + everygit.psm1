@@ -86,11 +86,13 @@
                 Write-Host ""
                 Set-Location $target
                 git pull origin main
+                Write-Host ""
                 Write-Host "✔  The updating was successful." -ForegroundColor Green
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
                 git clone $repo.clone_url $target
+                Write-Host ""
                 Write-Host "✔  The cloning was successful at $($target)" -ForegroundColor Green
             }
 
@@ -105,7 +107,7 @@
     #======================================================================
     foreach ($repo in $repos) {
 
-        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N) or all repositories ? (A)"
+        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N) or all repositories ? (A) "
         Write-Host ""
 
         if ($choice -in @("A", "a")) {
@@ -122,11 +124,14 @@
                 Write-Host ""
                 Set-Location $target
                 git pull origin main
+                Write-Host ""
                 Write-Host "✔  The updating was successful." -ForegroundColor Green
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
+                Write-Host ""
                 git clone $repo.clone_url $target
+                Write-Host ""
                 Write-Host "✔  The cloning was successful at $($target)" -ForegroundColor Green
             }
         }
