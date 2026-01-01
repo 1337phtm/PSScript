@@ -83,7 +83,7 @@
 
 
         if ($choice -in @("A", "a")) {
-            $target = "$clonePath\$($repos.name)"
+            $target = "$clonePath\$($repo.name)"
 
             if (Test-Path $target) {
                 Write-Host "⚠  Folder already exists. Updating..." -ForegroundColor Yellow
@@ -93,7 +93,8 @@
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
-                git clone $repo.clone_url $target
+                Write-Host ""
+                git clone $repos.clone_url $target
             }
         }
         if ($choice -in @("Y", "y")) {
@@ -108,6 +109,7 @@
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
+                Write-Host ""
                 git clone $repo.clone_url $target
             }
         }
