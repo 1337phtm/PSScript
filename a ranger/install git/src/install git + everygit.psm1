@@ -73,43 +73,56 @@
         Write-Host ""
     }
 
+    #======================================================================
+    # Clone All GitHub Repositories
+    #======================================================================
 
+    function Clone-All {
+        foreach ($repo in $repos) {
 
-    # Demande de clonage pour chaque repo
-    foreach ($repo in $repos) {
-
-        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N) or all repository (A) ?"
-        Write-Host ""
-
-
-        if ($choice -in @("A", "a")) {
             $target = "$clonePath\$($repo.name)"
 
             if (Test-Path $target) {
-                Write-Host "⚠  Folder already exists. Updating..." -ForegroundColor Yellow
-                Write-Host ""
+                Write-Host "⚠  $($repo.name) already exists. Updating..." -ForegroundColor Yellow
                 Set-Location $target
                 git pull origin main
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
-                Write-Host ""
-                git clone $repos.clone_url $target
+                git clone $repo.clone_url $target
             }
+
+            Write-Host ""
         }
+
+        Pause
+    }
+
+    #======================================================================
+    # Ask user for each repo OR clone all
+    #======================================================================
+
+    foreach ($repo in $repos) {
+
+        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N) or all repositories (A) ?"
+        Write-Host ""
+
+        if ($choice -in @("A", "a")) {
+            Clone-All
+            break   # ⬅️ IMPORTANT : on sort de la boucle principale
+        }
+
         if ($choice -in @("Y", "y")) {
 
             $target = "$clonePath\$($repo.name)"
 
             if (Test-Path $target) {
                 Write-Host "⚠  Folder already exists. Updating..." -ForegroundColor Yellow
-                Write-Host ""
                 Set-Location $target
                 git pull origin main
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
-                Write-Host ""
                 git clone $repo.clone_url $target
             }
         }
