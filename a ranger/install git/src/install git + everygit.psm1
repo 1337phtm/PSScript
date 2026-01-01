@@ -76,7 +76,6 @@
     #======================================================================
     # Clone All GitHub Repositories
     #======================================================================
-
     function Clone-All {
         foreach ($repo in $repos) {
 
@@ -84,12 +83,15 @@
 
             if (Test-Path $target) {
                 Write-Host "⚠  $($repo.name) already exists. Updating..." -ForegroundColor Yellow
+                Write-Host ""
                 Set-Location $target
                 git pull origin main
+                Write-Host "✔  The updating was successful." -ForegroundColor Green
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
                 git clone $repo.clone_url $target
+                Write-Host "✔  The cloning was successful at $($target)" -ForegroundColor Green
             }
 
             Write-Host ""
@@ -101,10 +103,9 @@
     #======================================================================
     # Ask user for each repo OR clone all
     #======================================================================
-
     foreach ($repo in $repos) {
 
-        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N) or all repositories (A) ?"
+        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N) or all repositories ? (A)"
         Write-Host ""
 
         if ($choice -in @("A", "a")) {
@@ -118,18 +119,20 @@
 
             if (Test-Path $target) {
                 Write-Host "⚠  Folder already exists. Updating..." -ForegroundColor Yellow
+                Write-Host ""
                 Set-Location $target
                 git pull origin main
+                Write-Host "✔  The updating was successful." -ForegroundColor Green
             }
             else {
                 Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
                 git clone $repo.clone_url $target
+                Write-Host "✔  The cloning was successful at $($target)" -ForegroundColor Green
             }
         }
         else {
             Write-Host "Skipping $($repo.name)..."
         }
-
         Write-Host ""
         Pause
         Write-Host ""
