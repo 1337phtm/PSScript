@@ -8,6 +8,16 @@ dans les tâches quotidiennes.
 
 ---
 
+## 📋 Prérequis
+- Windows 10 / 11
+- PowerShell **5.1** ou **7+**
+- Les Autorisation pour exécuter des scripts :
+
+```powershell
+   Get-ExecutionPolicy
+   Set-ExecutionPolicy RemoteSigned CurrentUser
+```
+
 ## 📌 Fonctionnalités principales
 
 - 📧 **Ouverture automatique de comptes Gmail** avec email pré-rempli (possible de les remplir dans un fichier)
