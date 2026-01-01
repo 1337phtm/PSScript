@@ -78,15 +78,31 @@
     # Demande de clonage pour chaque repo
     foreach ($repo in $repos) {
 
-        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N)"
+        $choice = Read-Host "Do you want to clone $($repo.name) ? (Y/N) or all repository (A) ?"
         Write-Host ""
 
+
+        if ($choice -in @("A", "a")) {
+            $target = "$clonePath\$($repos.name)"
+
+            if (Test-Path $target) {
+                Write-Host "⚠  Folder already exists. Updating..." -ForegroundColor Yellow
+                Write-Host ""
+                Set-Location $target
+                git pull origin main
+            }
+            else {
+                Write-Host "✔  Cloning $($repo.name)..." -ForegroundColor Green
+                git clone $repo.clone_url $target
+            }
+        }
         if ($choice -in @("Y", "y")) {
 
             $target = "$clonePath\$($repo.name)"
 
             if (Test-Path $target) {
-                Write-Host "⚠  Folder already exists. Updating" -ForegroundColor Yellow
+                Write-Host "⚠  Folder already exists. Updating..." -ForegroundColor Yellow
+                Write-Host ""
                 Set-Location $target
                 git pull origin main
             }
