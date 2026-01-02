@@ -1,5 +1,6 @@
 ﻿
 function Install-Git {
+    #Code pour main
     Clear-Host
 
     Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Green
@@ -83,4 +84,51 @@ function Install-Git {
     return
 }
 
-Export-ModuleMember -Function *-*
+function Search-InstallGit {
+    #fonction générique pour cherche git silencieusement
+
+    #======================================================================
+    # Git Installation Check
+    #======================================================================
+    Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Cyan
+    Write-Host "║            Git Installation          ║" -ForegroundColor Cyan
+    Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Cyan
+    Write-Host ""
+
+    try {
+        $gitCmd = Get-Command git -ErrorAction SilentlyContinue
+
+        if (-not $gitCmd) {
+            Write-Host "➜  Git is not installed." -ForegroundColor Yellow
+            Write-Host ""
+            $choice = Read-Host "Do you want to install Git now ? (Y/N)"
+            Write-Host ""
+
+            if ($choice -in @("Y", "y")) {
+                Write-Host "Installing Git..." -ForegroundColor Yellow
+                winget install --id Git.Git -e --source winget
+
+                # Reload PATH
+                $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
+                [System.Environment]::GetEnvironmentVariable("Path", "User")
+
+                Write-Host ""
+                Write-Host "✔  Git has been installed successfully." -ForegroundColor Green
+                Write-Host ""
+            }
+            else {
+                Write-Host "⚠  Git installation skipped. The script cannot continue." -ForegroundColor DarkRed
+                Pause
+                return
+            }
+        }
+    }
+    catch {
+        Write-Host "Error while checking Git installation." -ForegroundColor Red
+        return
+    }
+
+    Clear-Host
+}
+
+Export-ModuleMember -Function Search-InstallGit, Install-Git

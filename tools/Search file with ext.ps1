@@ -48,7 +48,7 @@ switch ($drivechoice.ToUpper()) {
             Write-Host ""
             Write-Host "Scanning $($drive.Root) ..." -ForegroundColor Yellow
             Write-Host ""
-            Get-ChildItem -Path $drive.Root -Filter "*.$ext" -Recurse -ErrorAction SilentlyContinue
+            Get-ChildItem -Path $drive.Root -Filter "*.$ext" -Recurse -ErrorAction SilentlyContinue -Force
         }
         return
     }

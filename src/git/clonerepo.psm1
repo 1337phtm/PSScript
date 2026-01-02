@@ -1,55 +1,13 @@
 ﻿function Clone-Repo {
     Clear-Host
-
-    #======================================================================
-    # Git Installation Check
-    #======================================================================
-    Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║            Git Installation          ║" -ForegroundColor Cyan
-    Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Cyan
-    Write-Host ""
-
-    try {
-        $gitCmd = Get-Command git -ErrorAction SilentlyContinue
-
-        if (-not $gitCmd) {
-            Write-Host "➜  Git is not installed." -ForegroundColor Yellow
-            Write-Host ""
-            $choice = Read-Host "Do you want to install Git now ? (Y/N)"
-            Write-Host ""
-
-            if ($choice -in @("Y", "y")) {
-                Write-Host "Installing Git..." -ForegroundColor Yellow
-                winget install --id Git.Git -e --source winget
-
-                # Reload PATH
-                $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
-                [System.Environment]::GetEnvironmentVariable("Path", "User")
-
-                Write-Host ""
-                Write-Host "✔  Git has been installed successfully." -ForegroundColor Green
-                Write-Host ""
-            }
-            else {
-                Write-Host "⚠  Git installation skipped. The script cannot continue." -ForegroundColor DarkRed
-                Pause
-                return
-            }
-        }
-    }
-    catch {
-        Write-Host "Error while checking Git installation." -ForegroundColor Red
-        return
-    }
-
-    Clear-Host
+    Search-InstallGit
 
     #======================================================================
     # Clone GitHub Repositories
     #======================================================================
 
     Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║               WKT Clone              ║" -ForegroundColor Cyan
+    Write-Host "║               Git Clone              ║" -ForegroundColor Cyan
     Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Cyan
     Write-Host ""
 
@@ -65,7 +23,7 @@
     $repos = Invoke-RestMethod "https://api.github.com/users/$user/repos"
 
     # Affichage des repos avec numéros
-    Write-Host "Available repositories:" -ForegroundColor Cyan
+    Write-Host "Available repositories : " -ForegroundColor Cyan
     Write-Host ""
 
     for ($i = 0; $i -lt $repos.Count; $i++) {
