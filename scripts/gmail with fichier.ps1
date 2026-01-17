@@ -1,7 +1,7 @@
 Clear-Host
 # Chemin du fichier contenant les emails
 
-$filePath = "..\lib\fileforgmail.psm1"
+$filePath = "..\src\gmail\email.psm1"
 
 # Vérifier si le fichier existe
 if (-not (Test-Path $filePath)) {
